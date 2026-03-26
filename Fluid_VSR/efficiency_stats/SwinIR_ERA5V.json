@@ -1,0 +1,23 @@
+{
+  "model_name": "SwinIR",
+  "dataset": "ERA5V",
+  "params_total": 3844345,
+  "params_trainable": 3844345,
+  "model_size_mb": 27.55,
+  "training": {
+    "batch_size": 25,
+    "batch_size_note": "frame-level (not sequence-level)",
+    "total_epochs": 55,
+    "total_iters": 40.7,
+    "time_per_epoch_sec": 0.74,
+    "time_per_iter_sec": null,
+    "total_time_sec": 10901.0,
+    "peak_memory_mb": null
+  },
+  "inference": {
+    "total_sequences": 36,
+    "time_per_sequence_sec": 0.1216,
+    "total_time_sec": 0.73,
+    "peak_memory_mb": 1040.91
+  }
+}

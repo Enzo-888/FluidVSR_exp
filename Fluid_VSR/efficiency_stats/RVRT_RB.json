@@ -1,0 +1,22 @@
+{
+  "model_name": "RVRT",
+  "dataset": "RB",
+  "params_total": 3957475,
+  "params_trainable": 3957475,
+  "model_size_mb": 15.81,
+  "training": {
+    "total_epochs": null,
+    "total_iters": 20000,
+    "time_per_epoch_sec": null,
+    "time_per_iter_sec": 0.396,
+    "total_time_sec": 7920.0,
+    "peak_memory_mb": null,
+    "batch_size": 1
+  },
+  "inference": {
+    "total_sequences": 12,
+    "time_per_sequence_sec": null,
+    "total_time_sec": null,
+    "peak_memory_mb": null
+  }
+}

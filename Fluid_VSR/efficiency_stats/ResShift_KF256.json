@@ -1,0 +1,23 @@
+{
+  "model_name": "ResShift",
+  "dataset": "KF256",
+  "params_total": 110408909,
+  "params_trainable": 110408909,
+  "model_size_mb": 421.3,
+  "training": {
+    "batch_size": 4,
+    "total_epochs": 120,
+    "total_iters": 75600,
+    "time_per_epoch_sec": 490.75,
+    "time_per_iter_sec": 0.81,
+    "total_time_sec": 61232.41,
+    "peak_memory_mb": null,
+    "batch_size_note": "frame-level (not sequence-level)"
+  },
+  "inference": {
+    "total_sequences": 49,
+    "time_per_sequence_sec": 92.9551,
+    "total_time_sec": 650.69,
+    "peak_memory_mb": 2491.8
+  }
+}

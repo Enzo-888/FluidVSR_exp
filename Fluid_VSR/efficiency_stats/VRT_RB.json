@@ -1,0 +1,22 @@
+{
+  "model_name": "VRT",
+  "dataset": "RB",
+  "params_total": 6132787,
+  "params_trainable": 6132787,
+  "model_size_mb": 24.2,
+  "training": {
+    "total_epochs": null,
+    "total_iters": 20000,
+    "time_per_epoch_sec": null,
+    "time_per_iter_sec": 0.54,
+    "total_time_sec": 10800.0,
+    "peak_memory_mb": null,
+    "batch_size": 8
+  },
+  "inference": {
+    "total_sequences": 12,
+    "time_per_sequence_sec": null,
+    "total_time_sec": null,
+    "peak_memory_mb": null
+  }
+}

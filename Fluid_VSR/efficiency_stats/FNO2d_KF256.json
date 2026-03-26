@@ -1,0 +1,23 @@
+{
+  "model_name": "FNO2d",
+  "dataset": "KF256",
+  "params_total": 686385,
+  "params_trainable": 686385,
+  "model_size_mb": 5.18,
+  "training": {
+    "batch_size": 64,
+    "total_epochs": 500,
+    "total_iters": 19500,
+    "time_per_epoch_sec": 52.09,
+    "time_per_iter_sec": 1.6019,
+    "total_time_sec": 31237.82,
+    "peak_memory_mb": null,
+    "batch_size_note": "frame-level (not sequence-level)"
+  },
+  "inference": {
+    "total_sequences": 49,
+    "time_per_sequence_sec": 0.2022,
+    "total_time_sec": 1.42,
+    "peak_memory_mb": 5166.31
+  }
+}

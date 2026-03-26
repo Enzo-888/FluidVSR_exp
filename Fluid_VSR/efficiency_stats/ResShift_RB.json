@@ -1,0 +1,23 @@
+{
+  "model_name": "ResShift",
+  "dataset": "RB",
+  "params_total": 112686949,
+  "params_trainable": 112686949,
+  "model_size_mb": 430.07,
+  "training": {
+    "batch_size": 16,
+    "total_epochs": 420,
+    "total_iters": 63000,
+    "time_per_epoch_sec": 90.67,
+    "time_per_iter_sec": 0.6356,
+    "total_time_sec": 40041.89,
+    "peak_memory_mb": null,
+    "batch_size_note": "frame-level (not sequence-level)"
+  },
+  "inference": {
+    "total_sequences": 144,
+    "time_per_sequence_sec": 12.8296,
+    "total_time_sec": 153.96,
+    "peak_memory_mb": 3351.98
+  }
+}

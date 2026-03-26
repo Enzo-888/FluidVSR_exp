@@ -1,0 +1,23 @@
+{
+  "model_name": "REMG",
+  "dataset": "RB",
+  "params_total": 112686949,
+  "params_trainable": 112686949,
+  "model_size_mb": 430.07,
+  "training": {
+    "batch_size": 16,
+    "total_epochs": 320,
+    "total_iters": 48000,
+    "time_per_epoch_sec": 157.18,
+    "time_per_iter_sec": 1.1539,
+    "total_time_sec": 55385.89,
+    "peak_memory_mb": null,
+    "batch_size_note": "frame-level (not sequence-level)"
+  },
+  "inference": {
+    "total_sequences": 144,
+    "time_per_sequence_sec": 15.3512,
+    "total_time_sec": 184.21,
+    "peak_memory_mb": 3364.77
+  }
+}

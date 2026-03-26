@@ -1,0 +1,23 @@
+{
+  "model_name": "SRNO",
+  "dataset": "RB",
+  "params_total": 2013633,
+  "params_trainable": 2013633,
+  "model_size_mb": 7.71,
+  "training": {
+    "batch_size": 32,
+    "total_epochs": 290,
+    "total_iters": 21750,
+    "time_per_epoch_sec": 71.45,
+    "time_per_iter_sec": 1.1398,
+    "total_time_sec": 24789.74,
+    "peak_memory_mb": null,
+    "batch_size_note": "frame-level (not sequence-level)"
+  },
+  "inference": {
+    "total_sequences": 144,
+    "time_per_sequence_sec": 0.2596,
+    "total_time_sec": 3.11,
+    "peak_memory_mb": 5971.24
+  }
+}

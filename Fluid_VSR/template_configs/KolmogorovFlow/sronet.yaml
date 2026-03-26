@@ -1,0 +1,67 @@
+model:
+  name: 'SRNO'
+  input_channels: 1
+  output_channels: 1
+  use_coord_input: True
+  width: 256
+  blocks: 16
+  upsample_factor: [4, 4]
+
+  encoder_config:
+    n_resblocks: 16
+    n_feats: 64
+    res_scale: 1.0
+    scale: 4
+    no_upsampling: True
+    input_channels: 1   # data channel only (coord is used internally, not concatenated to input)
+    output_channels: 64
+
+
+data:
+  name: 'KolmogorovFlow'
+  hr_path: '/data1/user/yc/NeurIPS26_Fluid_VSR/dataset/KF256_data/x4/HR'
+  lr_path: '/data1/user/yc/NeurIPS26_Fluid_VSR/dataset/KF256_data/x4/LR'
+  num_samples: 70            # 70 trajectories × 180 frames = 12,600 frames
+  sample_factor: 4           # 64 -> 256 (4x upscaling)
+  shape: [256, 256]
+  use_input_frame: False     # only use 'output' frames, skip 'input' initial condition
+  train_batchsize: 10
+  eval_batchsize: 10
+  train_ratio: 0.8           # 56 trajectories = 10,080 frames
+  valid_ratio: 0.1           # 7 trajectories = 1,260 frames
+  test_ratio: 0.1            # 7 trajectories = 1,260 frames
+  normalize: True
+  normalizer_type: 'PGN'
+
+train:
+  random_seed: 42
+  cuda: True
+  device: 0
+  epochs: 500
+  patience: 20
+  eval_freq: 5
+  saving_best: True
+  load_ckpt: False
+  saving_ckpt: True
+  ckpt_freq: 10
+  ckpt_max: 5
+  distribute: False
+  distribute_mode: 'DDP'
+  device_ids: [0, 1, 2, 3]
+
+optimize:
+  optimizer: 'AdamW'
+  lr: 0.001
+  weight_decay: 0.001
+
+schedule:
+  scheduler: 'StepLR'
+  step_size: 300
+  gamma: 0.5
+
+log:
+  verbose: True
+  log: True
+  log_dir: '/data1/user/yc/NeurIPS26_Fluid_VSR/code/DiffSR-main/logs/KolmogorovFlow/SRNO'
+  wandb: True
+  wandb_project: 'DiffVSR-SRNO-KolmogorovFlow'

@@ -1,0 +1,23 @@
+{
+  "model_name": "FNO2d",
+  "dataset": "ShallowWater",
+  "params_total": 686385,
+  "params_trainable": 686385,
+  "model_size_mb": 5.19,
+  "training": {
+    "batch_size": 300,
+    "batch_size_note": "frame-level (not sequence-level)",
+    "total_epochs": 95,
+    "total_iters": 47.5,
+    "time_per_epoch_sec": 0.5,
+    "time_per_iter_sec": null,
+    "total_time_sec": 891.0,
+    "peak_memory_mb": null
+  },
+  "inference": {
+    "total_sequences": 400,
+    "time_per_sequence_sec": 0.0209,
+    "total_time_sec": 0.42,
+    "peak_memory_mb": 6178.63
+  }
+}

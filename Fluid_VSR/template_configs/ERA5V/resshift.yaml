@@ -1,0 +1,96 @@
+model:
+  name: 'Resshift'
+
+resshift:
+  model:
+    target: models.resshift.models.unet.UNetModelSwin
+    ckpt_path: ~
+    params:
+      image_size: 256
+      in_channels: 1
+      model_channels: 160
+      out_channels: 1
+      attention_resolutions: [16]
+      dropout: 0
+      channel_mult: [1, 2, 2, 4]
+      num_res_blocks: [2, 2, 2, 2]
+      conv_resample: True
+      dims: 2
+      use_fp16: False
+      num_head_channels: 32
+      use_scale_shift_norm: True
+      resblock_updown: False
+      swin_depth: 2
+      swin_embed_dim: 192
+      window_size: 8
+      mlp_ratio: 4
+      cond_lq: True
+      lq_size: 256
+
+  diffusion:
+    target: models.resshift.models.script_util.create_gaussian_diffusion
+    params:
+      sf: 4
+      schedule_name: exponential
+      schedule_kwargs:
+        power: 0.3
+      etas_end: 0.99
+      steps: 15
+      min_noise_level: 0.04
+      kappa: 2.0
+      weighted_mse: False
+      predict_type: xstart
+      timestep_respacing: ~
+      scale_factor: 1.0
+      normalize_input: False
+      latent_flag: False
+
+data:
+  name: 'ERA5V'
+  hr_path: '/data/yc/dataset/era5_wind_200hPa_daily_cut/HR'
+  lr_path: '/data/yc/dataset/era5_wind_200hPa_daily_cut/LR'
+  num_samples: 578
+  sample_factor: 4
+  shape: [256, 256]
+  use_input_frame: False
+  train_batchsize: 20
+  eval_batchsize: 20
+  train_ratio: 0.98
+  valid_ratio: 0.01
+  test_ratio: 0.01
+  normalize: True
+  normalizer_type: 'PGN'
+
+train:
+  random_seed: 42
+  cuda: True
+  device: 0
+  epochs: 500
+  patience: 5
+  eval_freq: 20
+  saving_best: True
+  load_ckpt: False
+  ckpt_path: ~
+  saving_ckpt: True
+  ckpt_freq: 50
+  ckpt_max: 5
+  distribute: True
+  distribute_mode: 'DDP'
+  device_ids: [0, 1, 2, 3]
+
+optimize:
+  optimizer: 'AdamW'
+  lr: 0.00004
+  weight_decay: 0.001
+
+schedule:
+  scheduler: 'StepLR'
+  step_size: 300
+  gamma: 0.5
+
+log:
+  verbose: True
+  log: True
+  log_dir: '/data/yc/Fluid_VSR/logs/ERA5V/Resshift'
+  wandb: True
+  wandb_project: 'DiffVSR-Resshift-ERA5V'

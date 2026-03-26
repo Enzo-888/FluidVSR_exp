@@ -1,0 +1,67 @@
+model:
+  name: 'SRNO'
+  input_channels: 1
+  output_channels: 1
+  use_coord_input: True
+  width: 256
+  blocks: 16
+  upsample_factor: [4, 4]
+
+  encoder_config:
+    n_resblocks: 16
+    n_feats: 64
+    res_scale: 1.0
+    scale: 4
+    no_upsampling: True
+    input_channels: 1   # data channel only (coord is used internally, not concatenated to input)
+    output_channels: 64
+
+
+data:
+  name: 'RayleighBenard'
+  hr_path: '/data1/user/yc/NeurIPS26_Fluid_VSR/dataset/RB/code/rayleigh-benard-32/data1/HR'
+  lr_path: '/data1/user/yc/NeurIPS26_Fluid_VSR/dataset/RB/code/rayleigh-benard-32/data1/LR'
+  num_samples: 120           # use first 120 .npz files (12,000 frames)
+  sample_factor: 4           # 32 -> 128 (4x upscaling)
+  shape: [128, 128]
+  use_input_frame: False     # only use 'output' frames, skip 'input' initial condition
+  train_batchsize: 32
+  eval_batchsize: 32
+  train_ratio: 0.8           # 80 sequences = 8,000 frames
+  valid_ratio: 0.1           # 10 sequences = 1,000 frames
+  test_ratio: 0.1            # 10 sequences = 1,000 frames
+  normalize: True
+  normalizer_type: 'PGN'
+
+train:
+  random_seed: 42
+  cuda: True
+  device: 0
+  epochs: 500
+  patience: 20
+  eval_freq: 5
+  saving_best: True
+  load_ckpt: False
+  saving_ckpt: True
+  ckpt_freq: 10
+  ckpt_max: 5
+  distribute: False
+  distribute_mode: 'DDP'
+  device_ids: [0, 1, 2, 3]
+
+optimize:
+  optimizer: 'AdamW'
+  lr: 0.001
+  weight_decay: 0.001
+
+schedule:
+  scheduler: 'StepLR'
+  step_size: 300
+  gamma: 0.5
+
+log:
+  verbose: True
+  log: True
+  log_dir: '/data1/user/yc/NeurIPS26_Fluid_VSR/code/DiffSR-main/logs/sronet'
+  wandb: True
+  wandb_project: 'DiffVSR-sronet-RayleighBenard'

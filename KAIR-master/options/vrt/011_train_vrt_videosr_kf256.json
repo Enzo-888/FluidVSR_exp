@@ -1,0 +1,120 @@
+{
+  "task": "011_train_vrt_videosr_kf256"
+  , "model": "vrt"
+  , "gpu_ids": [1, 2, 3, 4]
+  , "dist": true
+  , "find_unused_parameters": true
+  , "use_static_graph": false
+
+  , "scale": 4
+  , "n_channels": 1
+
+  , "path": {
+    "root": "experiments"
+    , "pretrained_netG": null
+    , "pretrained_netE": null
+  }
+
+  , "datasets": {
+    "train": {
+      "name": "KF256_train"
+      , "dataset_type": "VideoRecurrentKF256Dataset"
+      , "dataroot_gt": "/data/yc/dataset/KF256_data/x4/HR"
+      , "dataroot_lq": "/data/yc/dataset/KF256_data/x4/LR"
+      , "num_samples": 70
+      , "num_frame": 6
+      , "train_ratio": 0.8
+      , "valid_ratio": 0.1
+      , "split": "train"
+      , "use_mirror_sequence": true
+      , "test_mode": false
+
+      , "dataloader_shuffle": true
+      , "dataloader_num_workers": 8
+      , "dataloader_batch_size": 8
+    }
+    , "test": {
+      "name": "KF256_valid"
+      , "dataset_type": "VideoRecurrentKF256Dataset"
+      , "dataroot_gt": "/data/yc/dataset/KF256_data/x4/HR"
+      , "dataroot_lq": "/data/yc/dataset/KF256_data/x4/LR"
+      , "num_samples": 70
+      , "num_frame": null
+      , "train_ratio": 0.8
+      , "valid_ratio": 0.1
+      , "split": "valid"
+      , "use_mirror_sequence": false
+      , "test_mode": true
+    }
+  }
+
+  , "netG": {
+    "net_type": "vrt"
+    , "upscale": 4
+    , "in_chans": 1
+    , "out_chans": 1
+    , "img_size": [6, 64, 64]
+    , "window_size": [6, 4, 4]
+    , "depths": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+    , "indep_reconsts": [11, 12]
+    , "embed_dims": [64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64]
+    , "num_heads": [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+    , "spynet_path": "model_zoo/vrt/spynet_sintel_final-3d2a1287.pth"
+    , "pa_frames": 2
+    , "deformable_groups": 8
+    , "nonblind_denoising": false
+
+    , "use_checkpoint_attn": false
+    , "use_checkpoint_ffn": false
+    , "no_checkpoint_attn_blocks": []
+    , "no_checkpoint_ffn_blocks": []
+
+    , "init_type": "default"
+  }
+
+  , "train": {
+    "G_lossfn_type": "charbonnier"
+    , "G_lossfn_weight": 1.0
+    , "G_charbonnier_eps": 1e-9
+
+    , "E_decay": 0
+
+    , "G_optimizer_type": "adam"
+    , "G_optimizer_lr": 1e-4
+    , "G_optimizer_betas": [0.9, 0.99]
+    , "G_optimizer_wd": 0
+    , "G_optimizer_clipgrad": null
+    , "G_optimizer_reuse": true
+
+    , "fix_iter": 5000
+    , "fix_lr_mul": 0.125
+    , "fix_keys": ["spynet", "deform"]
+
+    , "manual_seed": 42
+
+    , "total_iter": 20000
+    , "G_scheduler_type": "CosineAnnealingWarmRestarts"
+    , "G_scheduler_periods": 20000
+    , "G_scheduler_eta_min": 1e-7
+
+    , "G_regularizer_orthstep": null
+    , "G_regularizer_clipstep": null
+
+    , "G_param_strict": true
+    , "E_param_strict": true
+
+    , "checkpoint_test": 20000
+    , "checkpoint_save": 20000
+    , "checkpoint_print": 200
+  }
+
+  , "val": {
+    "save_img": false
+    , "pad_seq": false
+    , "flip_seq": false
+    , "center_frame_only": false
+    , "num_frame_testing": 0
+    , "num_frame_overlapping": 2
+    , "size_patch_testing": 0
+  }
+}

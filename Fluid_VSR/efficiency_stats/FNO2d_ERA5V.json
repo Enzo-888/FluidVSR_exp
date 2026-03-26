@@ -1,0 +1,23 @@
+{
+  "model_name": "FNO2d",
+  "dataset": "ERA5V",
+  "params_total": 686385,
+  "params_trainable": 686385,
+  "model_size_mb": 5.19,
+  "training": {
+    "batch_size": 100,
+    "batch_size_note": "frame-level (not sequence-level)",
+    "total_epochs": 170,
+    "total_iters": 32.3,
+    "time_per_epoch_sec": 0.19,
+    "time_per_iter_sec": null,
+    "total_time_sec": 7814.0,
+    "peak_memory_mb": null
+  },
+  "inference": {
+    "total_sequences": 36,
+    "time_per_sequence_sec": 0.0324,
+    "total_time_sec": 0.19,
+    "peak_memory_mb": 8051.87
+  }
+}

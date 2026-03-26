@@ -1,0 +1,23 @@
+{
+  "model_name": "REMG",
+  "dataset": "KF256",
+  "params_total": 110408909,
+  "params_trainable": 110408909,
+  "model_size_mb": 421.3,
+  "training": {
+    "batch_size": 4,
+    "total_epochs": 340,
+    "total_iters": 214200,
+    "time_per_epoch_sec": 368.03,
+    "time_per_iter_sec": 0.6451,
+    "total_time_sec": 138190.5,
+    "peak_memory_mb": null,
+    "batch_size_note": "frame-level (not sequence-level)"
+  },
+  "inference": {
+    "total_sequences": 49,
+    "time_per_sequence_sec": 114.4403,
+    "total_time_sec": 801.08,
+    "peak_memory_mb": 2539.79
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "model_name": "VRT",
+  "dataset": "KF256",
+  "params_total": 6132787,
+  "params_trainable": 6132787,
+  "model_size_mb": 24.2,
+  "training": {
+    "batch_size": 8,
+    "batch_size_note": "sequence-level for video models",
+    "total_epochs": null,
+    "total_iters": 20000,
+    "time_per_epoch_sec": null,
+    "time_per_iter_sec": 1.284,
+    "total_time_sec": 25682.66,
+    "peak_memory_mb": 13457.1
+  },
+  "inference": {
+    "total_sequences": 7,
+    "time_per_sequence_sec": 3.4374,
+    "total_time_sec": 24.06,
+    "peak_memory_mb": 12615.92
+  }
+}

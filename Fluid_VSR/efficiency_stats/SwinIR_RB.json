@@ -1,0 +1,23 @@
+{
+  "model_name": "SwinIR",
+  "dataset": "RB",
+  "params_total": 4729081,
+  "params_trainable": 4729081,
+  "model_size_mb": 18.52,
+  "training": {
+    "batch_size": 64,
+    "total_epochs": 95,
+    "total_iters": 3515,
+    "time_per_epoch_sec": 28.53,
+    "time_per_iter_sec": 0.9174,
+    "total_time_sec": 3224.82,
+    "peak_memory_mb": null,
+    "batch_size_note": "frame-level (not sequence-level)"
+  },
+  "inference": {
+    "total_sequences": 144,
+    "time_per_sequence_sec": 0.1129,
+    "total_time_sec": 1.35,
+    "peak_memory_mb": 709.46
+  }
+}

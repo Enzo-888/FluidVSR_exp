@@ -1,0 +1,23 @@
+{
+  "model_name": "RVRT",
+  "dataset": "KF256",
+  "params_total": 3957475,
+  "params_trainable": 3957475,
+  "model_size_mb": 15.81,
+  "training": {
+    "batch_size": 16,
+    "batch_size_note": "sequence-level for video models",
+    "total_epochs": null,
+    "total_iters": 20000,
+    "time_per_epoch_sec": null,
+    "time_per_iter_sec": 1.0561,
+    "total_time_sec": 21121.53,
+    "peak_memory_mb": 10477.72
+  },
+  "inference": {
+    "total_sequences": 7,
+    "time_per_sequence_sec": 6.4246,
+    "total_time_sec": 44.97,
+    "peak_memory_mb": 713.42
+  }
+}

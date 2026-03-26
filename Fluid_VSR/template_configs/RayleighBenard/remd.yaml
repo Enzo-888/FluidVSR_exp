@@ -1,0 +1,116 @@
+model:
+  name: 'ReMG'
+
+resshift: 
+  model:
+    target: models.remg.models.unet.UNetModelSwin
+    ckpt_path: ~
+    params:
+      image_size: 128
+      in_channels: 1
+      model_channels: 160
+      out_channels: 1
+      attention_resolutions: [16]
+      dropout: 0
+      channel_mult: [1, 2, 2, 4]
+      num_res_blocks: [2, 2, 2, 2]
+      conv_resample: True
+      dims: 2
+      use_fp16: False
+      num_head_channels: 32
+      use_scale_shift_norm: True
+      resblock_updown: False
+      swin_depth: 2
+      swin_embed_dim: 192
+      window_size: 8
+      mlp_ratio: 4
+      cond_lq: True
+      lq_size: 128
+
+  diffusion:
+    target: models.remg.models.script_util.create_gaussian_diffusion
+    params:
+      sf: 4
+      schedule_name: exponential
+      schedule_kwargs:
+        power: 0.3
+      etas_end: 0.99
+      steps: 15
+      min_noise_level: 0.04
+      kappa: 2.0
+      weighted_mse: False
+      predict_type: xstart
+      timestep_respacing: ~
+      scale_factor: 1.0
+      normalize_input: False
+      latent_flag: False
+      m2no_params:
+        in_channels: 1
+        base_channels: 64
+        k: 4
+        c: 4
+        grid_levels: [8, 4, 2, 1]
+        resolutions: [128, 128]
+        bias: True
+        padding_mode: 'zeros' 
+
+data:
+  name: 'RayleighBenard'
+  hr_path: '/data/yc/dataset/RB/code/rayleigh-benard-32/data1/HR'
+  lr_path: '/data/yc/dataset/RB/code/rayleigh-benard-32/data1/LR'
+  num_samples: 120           # use first 120 .npz files (12,000 frames)
+  sample_factor: 4
+  shape: [128, 128]
+  use_input_frame: False     # only use 'output' frames, skip 'input' initial condition
+  train_batchsize: 16
+  eval_batchsize: 16
+  train_ratio: 0.8           # 80 sequences = 8,000 frames
+  valid_ratio: 0.1           # 10 sequences = 1,000 frames
+  test_ratio: 0.1            # 10 sequences = 1,000 frames
+  normalize: True
+  normalizer_type: 'PGN'
+
+train:
+  random_seed: 42
+  cuda: True
+  device: 0
+  epochs: 500
+  patience: 5
+  eval_freq: 10
+  saving_best: True
+  load_ckpt: False
+  saving_ckpt: True
+  ckpt_freq: 10
+  ckpt_max: 3
+  distribute: True
+  distribute_mode: 'DDP'
+  device_ids: [0, 1, 2, 3]
+
+optimize:
+  optimizer: 'AdamW'
+  lr: 0.00001
+  weight_decay: 0.05
+
+schedule:
+  scheduler: 'StepLR'
+  step_size: 300
+  gamma: 0.5
+
+log:
+  verbose: True
+  log: True
+  log_dir: '/data/yc/Fluid_VSR/logs/RayleighBenard/ReMG'
+  wandb: True
+  wandb_project: 'DiffVSR-resshift-RayleighBenard'
+
+beta_schedule:
+  train:
+    schedule: 'linear'
+    n_timestep: 2000
+    linear_start: 1e-4
+    linear_end: 2e-2
+  val:
+    schedule: 'linear'
+    n_timestep: 2000
+    linear_start: 1e-4
+    linear_end: 2e-2

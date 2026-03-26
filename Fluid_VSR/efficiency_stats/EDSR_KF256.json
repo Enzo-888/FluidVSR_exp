@@ -1,0 +1,23 @@
+{
+  "model_name": "EDSR",
+  "dataset": "KF256",
+  "params_total": 1515265,
+  "params_trainable": 1515265,
+  "model_size_mb": 5.8,
+  "training": {
+    "batch_size": 160,
+    "total_epochs": 110,
+    "total_iters": 1650,
+    "time_per_epoch_sec": 126.11,
+    "time_per_iter_sec": 10.0935,
+    "total_time_sec": 16654.3,
+    "peak_memory_mb": null,
+    "batch_size_note": "frame-level (not sequence-level)"
+  },
+  "inference": {
+    "total_sequences": 49,
+    "time_per_sequence_sec": 0.1337,
+    "total_time_sec": 0.94,
+    "peak_memory_mb": 5862.99
+  }
+}

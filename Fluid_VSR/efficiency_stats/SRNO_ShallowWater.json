@@ -1,0 +1,23 @@
+{
+  "model_name": "SRNO",
+  "dataset": "ShallowWater",
+  "params_total": 2013633,
+  "params_trainable": 2013633,
+  "model_size_mb": 7.71,
+  "training": {
+    "batch_size": 32,
+    "batch_size_note": "frame-level (not sequence-level)",
+    "total_epochs": 105,
+    "total_iters": 427.35,
+    "time_per_epoch_sec": 4.07,
+    "time_per_iter_sec": null,
+    "total_time_sec": 10419.0,
+    "peak_memory_mb": null
+  },
+  "inference": {
+    "total_sequences": 400,
+    "time_per_sequence_sec": 0.1878,
+    "total_time_sec": 3.76,
+    "peak_memory_mb": 5972.24
+  }
+}

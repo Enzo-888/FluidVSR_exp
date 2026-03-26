@@ -1,0 +1,23 @@
+{
+  "model_name": "FNO2d",
+  "dataset": "RB",
+  "params_total": 686385,
+  "params_trainable": 686385,
+  "model_size_mb": 5.18,
+  "training": {
+    "batch_size": 256,
+    "total_epochs": 355,
+    "total_iters": 3195,
+    "time_per_epoch_sec": 6.55,
+    "time_per_iter_sec": 0.875,
+    "total_time_sec": 2795.49,
+    "peak_memory_mb": null,
+    "batch_size_note": "frame-level (not sequence-level)"
+  },
+  "inference": {
+    "total_sequences": 144,
+    "time_per_sequence_sec": 0.0289,
+    "total_time_sec": 0.35,
+    "peak_memory_mb": 5166.31
+  }
+}

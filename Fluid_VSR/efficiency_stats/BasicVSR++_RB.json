@@ -1,0 +1,22 @@
+{
+  "model_name": "BasicVSR++",
+  "dataset": "RB",
+  "params_total": 7320628,
+  "params_trainable": 7320628,
+  "model_size_mb": 28.04,
+  "training": {
+    "total_epochs": null,
+    "total_iters": 9900,
+    "time_per_epoch_sec": null,
+    "time_per_iter_sec": 2.0927,
+    "total_time_sec": 20718.0,
+    "peak_memory_mb": null,
+    "batch_size": 1
+  },
+  "inference": {
+    "total_sequences": 12,
+    "time_per_sequence_sec": null,
+    "total_time_sec": null,
+    "peak_memory_mb": null
+  }
+}

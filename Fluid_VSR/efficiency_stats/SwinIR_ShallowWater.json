@@ -1,0 +1,23 @@
+{
+  "model_name": "SwinIR",
+  "dataset": "ShallowWater",
+  "params_total": 3844345,
+  "params_trainable": 3844345,
+  "model_size_mb": 18.55,
+  "training": {
+    "batch_size": 96,
+    "batch_size_note": "frame-level (not sequence-level)",
+    "total_epochs": 60,
+    "total_iters": 110.4,
+    "time_per_epoch_sec": 1.84,
+    "time_per_iter_sec": null,
+    "total_time_sec": 2503.0,
+    "peak_memory_mb": null
+  },
+  "inference": {
+    "total_sequences": 400,
+    "time_per_sequence_sec": 0.0849,
+    "total_time_sec": 1.7,
+    "peak_memory_mb": 990.59
+  }
+}

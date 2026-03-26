@@ -1,0 +1,23 @@
+{
+  "model_name": "EDSR",
+  "dataset": "ERA5V",
+  "params_total": 1515265,
+  "params_trainable": 1515265,
+  "model_size_mb": 5.81,
+  "training": {
+    "batch_size": 128,
+    "batch_size_note": "frame-level (not sequence-level)",
+    "total_epochs": 95,
+    "total_iters": 13.3,
+    "time_per_epoch_sec": 0.14,
+    "time_per_iter_sec": null,
+    "total_time_sec": 2837.0,
+    "peak_memory_mb": null
+  },
+  "inference": {
+    "total_sequences": 36,
+    "time_per_sequence_sec": 0.0273,
+    "total_time_sec": 0.16,
+    "peak_memory_mb": 4690.49
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "model_name": "EDSR",
+  "dataset": "ShallowWater",
+  "params_total": 1515265,
+  "params_trainable": 1515265,
+  "model_size_mb": 5.81,
+  "training": {
+    "batch_size": 320,
+    "batch_size_note": "frame-level (not sequence-level)",
+    "total_epochs": 100,
+    "total_iters": 31.0,
+    "time_per_epoch_sec": 0.31,
+    "time_per_iter_sec": null,
+    "total_time_sec": 587.0,
+    "peak_memory_mb": null
+  },
+  "inference": {
+    "total_sequences": 400,
+    "time_per_sequence_sec": 0.0128,
+    "total_time_sec": 0.26,
+    "peak_memory_mb": 3002.56
+  }
+}

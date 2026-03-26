@@ -1,0 +1,23 @@
+{
+  "model_name": "SDIFT",
+  "dataset": "SW",
+  "params_total": 3924905,
+  "params_trainable": 3924905,
+  "model_size_mb": 15.21,
+  "training": {
+    "batch_size": null,
+    "batch_size_note": "sequence-level for video models",
+    "total_epochs": null,
+    "total_iters": null,
+    "time_per_epoch_sec": null,
+    "time_per_iter_sec": null,
+    "total_time_sec": null,
+    "peak_memory_mb": null
+  },
+  "inference": {
+    "total_sequences": 20,
+    "time_per_sequence_sec": 21.4913,
+    "total_time_sec": 429.83,
+    "peak_memory_mb": 1410.49
+  }
+}

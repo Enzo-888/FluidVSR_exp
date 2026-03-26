@@ -1,0 +1,23 @@
+{
+  "model_name": "SRNO",
+  "dataset": "KF256",
+  "params_total": 2013633,
+  "params_trainable": 2013633,
+  "model_size_mb": 7.71,
+  "training": {
+    "batch_size": 10,
+    "total_epochs": 105,
+    "total_iters": 26460,
+    "time_per_epoch_sec": 326.28,
+    "time_per_iter_sec": 1.539,
+    "total_time_sec": 40721.47,
+    "peak_memory_mb": null,
+    "batch_size_note": "frame-level (not sequence-level)"
+  },
+  "inference": {
+    "total_sequences": 49,
+    "time_per_sequence_sec": 1.8847,
+    "total_time_sec": 13.19,
+    "peak_memory_mb": 7431.05
+  }
+}

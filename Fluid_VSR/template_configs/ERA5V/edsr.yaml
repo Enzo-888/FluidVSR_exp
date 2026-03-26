@@ -1,0 +1,56 @@
+model:
+  name: 'EDSR'
+  in_channels: 1
+  out_channels: 1
+  hidden_channels: 128
+  n_res_blocks: 16
+  upscale_factor: 4
+
+data:
+  name: 'ERA5V'
+  hr_path: '/data/yc/dataset/era5_wind_200hPa_daily_cut/HR'
+  lr_path: '/data/yc/dataset/era5_wind_200hPa_daily_cut/LR'
+  num_samples: 578
+  sample_factor: 4
+  shape: [256, 256]
+  use_input_frame: False
+  train_batchsize: 128
+  eval_batchsize: 128
+  train_ratio: 0.98
+  valid_ratio: 0.01
+  test_ratio: 0.01
+  normalize: True
+  normalizer_type: 'PGN'
+
+train:
+  random_seed: 42
+  cuda: True
+  device: 0
+  epochs: 500
+  patience: 10
+  eval_freq: 5
+  saving_best: True
+  load_ckpt: False
+  saving_ckpt: True
+  ckpt_freq: 5
+  ckpt_max: 5
+  distribute: False
+  distribute_mode: 'DDP'
+  device_ids: [0, 1, 2, 3]
+
+optimize:
+  optimizer: 'AdamW'
+  lr: 0.001
+  weight_decay: 0.001
+
+schedule:
+  scheduler: 'StepLR'
+  step_size: 300
+  gamma: 0.5
+
+log:
+  verbose: True
+  log: True
+  log_dir: '/data/yc/Fluid_VSR/logs/ERA5V/EDSR'
+  wandb: True
+  wandb_project: 'DiffVSR-EDSR-ERA5V'

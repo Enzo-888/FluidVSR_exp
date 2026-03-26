@@ -1,0 +1,23 @@
+{
+  "model_name": "SRNO",
+  "dataset": "ERA5V",
+  "params_total": 2013633,
+  "params_trainable": 2013633,
+  "model_size_mb": 7.71,
+  "training": {
+    "batch_size": 10,
+    "batch_size_note": "frame-level (not sequence-level)",
+    "total_epochs": 145,
+    "total_iters": 261.0,
+    "time_per_epoch_sec": 1.8,
+    "time_per_iter_sec": null,
+    "total_time_sec": 69284.0,
+    "peak_memory_mb": null
+  },
+  "inference": {
+    "total_sequences": 36,
+    "time_per_sequence_sec": 0.264,
+    "total_time_sec": 1.58,
+    "peak_memory_mb": 7430.24
+  }
+}

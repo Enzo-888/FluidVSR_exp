@@ -1,0 +1,23 @@
+{
+  "model_name": "SwinIR",
+  "dataset": "KF256",
+  "params_total": 7088377,
+  "params_trainable": 7088377,
+  "model_size_mb": 27.52,
+  "training": {
+    "batch_size": 28,
+    "total_epochs": 55,
+    "total_iters": 4950,
+    "time_per_epoch_sec": 269.35,
+    "time_per_iter_sec": 3.536,
+    "total_time_sec": 17503.04,
+    "peak_memory_mb": null,
+    "batch_size_note": "frame-level (not sequence-level)"
+  },
+  "inference": {
+    "total_sequences": 49,
+    "time_per_sequence_sec": 0.8859,
+    "total_time_sec": 6.2,
+    "peak_memory_mb": 1135.77
+  }
+}
