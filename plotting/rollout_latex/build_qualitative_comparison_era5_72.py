@@ -6,7 +6,7 @@ Inputs:
   - WRD(full) predictions
 
 Outputs are written into:
-  ./qualitative
+  ./comparison
 
 This keeps the original multi-dataset script unchanged and provides a
 single-dataset entry point for the 72-frame ERA5 experiment.

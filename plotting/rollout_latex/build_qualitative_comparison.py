@@ -2,12 +2,12 @@
 """Select and render qualitative comparison panels for paper figures.
 
 Outputs under:
-  ./qualitative
+  ./comparison
 
 For each dataset:
   - ranked top20 candidate CSV
-  - best panel PNG in qualitative/panels/{dataset}_best.png
-  - individual candidate PNGs in qualitative/panels/{dataset}/
+  - best panel PNG in comparison/panels/{dataset}_best.png
+  - individual candidate PNGs in comparison/panels/{dataset}/
   - LaTeX wrapper for the best PNG
 
 Panel layout:
@@ -29,7 +29,7 @@ import torch
 import torch.nn.functional as F
 
 THIS_DIR = Path(__file__).resolve().parent
-ROOT = THIS_DIR / "qualitative"
+ROOT = THIS_DIR / "comparison"
 ROLLOUT_ROOT = THIS_DIR
 CANDIDATE_DIR = ROOT / "candidates"
 PANEL_DIR = ROOT / "panels"

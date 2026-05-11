@@ -463,10 +463,10 @@ Rollout outputs:
 - `tex/*.tex`
 - `manifest.json`
 
-Qualitative outputs and metadata:
-- `qualitative/candidates/*.csv`
-- `qualitative/manifests/*.json`
-- `qualitative/tex/*.tex`
+Comparison outputs and metadata:
+- `comparison/candidates/*.csv`
+- `comparison/manifests/*.json`
+- `comparison/tex/*.tex`
 
 Regenerate rollout CSV/LaTeX files:
 
