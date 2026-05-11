@@ -1,3 +1,101 @@
+## FluidVSR Project Usage
+
+这是 `RVRT` 在本项目里的本地适配说明。下面原始 upstream README 仍然保留；如果你只是想复现本项目实验，请优先看这一节。
+
+### 当前用途
+
+本地整理好的主要是 `×4` 超分任务：
+
+- `RBC`
+- `SW`
+- `KF256`
+
+### 关键文件
+
+- `main_train_rvrt_rb.py`
+- `main_train_rvrt_sw.py`
+- `main_train_rvrt_kf256.py`
+- `main_test_rvrt_rb.py`
+- `main_test_rvrt_sw.py`
+- `main_test_rvrt_kf256.py`
+- `data/dataset_video_rb.py`
+- `data/dataset_video_sw.py`
+- `data/dataset_video_kf256.py`
+- `efficiency_tracker.py`
+
+### 训练
+
+`RBC`：
+
+```bash
+cd /data/yc/FluidVSR/RVRT-main
+CUDA_VISIBLE_DEVICES=0 python main_train_rvrt_rb.py
+```
+
+`SW`：
+
+```bash
+cd /data/yc/FluidVSR/RVRT-main
+CUDA_VISIBLE_DEVICES=0 python main_train_rvrt_sw.py
+```
+
+`KF256`：
+
+```bash
+cd /data/yc/FluidVSR/RVRT-main
+CUDA_VISIBLE_DEVICES=0 python main_train_rvrt_kf256.py
+```
+
+### 推理与导出
+
+`RBC`：
+
+```bash
+cd /data/yc/FluidVSR/RVRT-main
+python main_test_rvrt_rb.py --checkpoint experiments/rvrt_rb/<ckpt>.pth
+```
+
+`SW`：
+
+```bash
+cd /data/yc/FluidVSR/RVRT-main
+python main_test_rvrt_sw.py --checkpoint experiments/rvrt_sw/<ckpt>.pth
+```
+
+`KF256`：
+
+```bash
+cd /data/yc/FluidVSR/RVRT-main
+python main_test_rvrt_kf256.py --checkpoint experiments/rvrt_kf256/<ckpt>.pth
+```
+
+### 输出格式
+
+默认输出到：
+
+```text
+experiments/rvrt_<dataset>/test_predictions/
+```
+
+目录中会包含：
+
+- `pred.npz`
+- `gt.npz`
+- `lr.npz`
+- `meta.json`
+- `RVRT_<DATASET>_efficiency.json`
+
+### 统一评估
+
+导出结果后，统一回到：
+
+- `/data/yc/FluidVSR/Fluid_VSR/template_notebook/`
+- `/data/yc/FluidVSR/Fluid_VSR/tools/`
+
+完成指标计算和可视化。
+
+---
+
 # Recurrent Video Restoration Transformer with Guided Deformable Attention (RVRT, NeurlPS2022)
 
 [arxiv](https://arxiv.org/abs/2206.02146)

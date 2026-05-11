@@ -1,3 +1,99 @@
+## FluidVSR Project Usage
+
+这是 `KAIR` 在本项目里的本地说明文档。下面原始 upstream README 仍然保留；如果你只是想复现本项目实验，请优先看这一节。
+
+本仓库虽然保留了 `KAIR` 的大部分目录，但在本项目里只实际使用其中的 `VRT` 路线。
+
+### 当前用途
+
+本地整理好的 `VRT` 任务主要是 `×4` 超分：
+
+- `RBC`
+- `SW`
+- `KF256`
+
+### 关键文件
+
+- `main_train_vrt.py`
+- `main_test_vrt_rb.py`
+- `main_test_vrt_sw.py`
+- `main_test_vrt_kf256.py`
+- `options/vrt/010_train_vrt_videosr_rb.json`
+- `options/vrt/011_train_vrt_videosr_kf256.json`
+- `options/vrt/012_train_vrt_videosr_sw.json`
+- `data/dataset_video_rb.py`
+- `data/dataset_video_sw.py`
+- `data/dataset_video_kf256.py`
+- `efficiency_tracker.py`
+
+### 训练
+
+`RBC`：
+
+```bash
+cd /data/yc/FluidVSR/KAIR-master
+python main_train_vrt.py --opt options/vrt/010_train_vrt_videosr_rb.json
+```
+
+`KF256`：
+
+```bash
+cd /data/yc/FluidVSR/KAIR-master
+python main_train_vrt.py --opt options/vrt/011_train_vrt_videosr_kf256.json
+```
+
+`SW`：
+
+```bash
+cd /data/yc/FluidVSR/KAIR-master
+python main_train_vrt.py --opt options/vrt/012_train_vrt_videosr_sw.json
+```
+
+### 推理与导出
+
+`RBC`：
+
+```bash
+cd /data/yc/FluidVSR/KAIR-master
+python main_test_vrt_rb.py --opt options/vrt/010_train_vrt_videosr_rb.json --checkpoint experiments/010_train_vrt_videosr_rb/models/<ckpt>.pth
+```
+
+`KF256`：
+
+```bash
+cd /data/yc/FluidVSR/KAIR-master
+python main_test_vrt_kf256.py --opt options/vrt/011_train_vrt_videosr_kf256.json --checkpoint experiments/011_train_vrt_videosr_kf256/models/<ckpt>.pth
+```
+
+`SW`：
+
+```bash
+cd /data/yc/FluidVSR/KAIR-master
+python main_test_vrt_sw.py --opt options/vrt/012_train_vrt_videosr_sw.json --checkpoint experiments/012_train_vrt_videosr_sw/models/<ckpt>.pth
+```
+
+### 输出格式
+
+默认输出到：
+
+```text
+experiments/<exp_name>/test_predictions/
+```
+
+目录中会包含：
+
+- `pred.npz`
+- `gt.npz`
+- `lr.npz`
+- `meta.json`
+
+### 备注
+
+- 这个目录下虽然还有 `KAIR` 原始支持的其他图像恢复模型，但它们不是本项目 baseline 的主要入口。
+- 如果只是为了复现实验，不要在这里四处找通用入口，直接使用上面列出的 `VRT` 数据集脚本即可。
+
+---
+
 ## Training and testing codes for USRNet, DnCNN, FFDNet, SRMD, DPSR, MSRResNet, ESRGAN, BSRGAN, SwinIR, VRT, RVRT
 [![download](https://img.shields.io/github/downloads/cszn/KAIR/total.svg)](https://github.com/cszn/KAIR/releases) ![visitors](https://visitor-badge.glitch.me/badge?page_id=cszn/KAIR) 
 

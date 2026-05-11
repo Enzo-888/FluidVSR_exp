@@ -38,10 +38,11 @@ class EfficiencyTracker:
         if device_str.startswith('cuda'):
             torch.cuda.reset_peak_memory_stats()
 
-    def end_training(self, total_iters):
+    def end_training(self, total_iters, total_epochs=None):
         """结束训练"""
         self.train_end_time = time.time()
         self.total_iters = total_iters
+        self.total_epochs = total_epochs or 0
 
     def start_inference(self, device='cuda:0'):
         """开始推理（在预热后调用）"""
@@ -70,7 +71,7 @@ class EfficiencyTracker:
             "training": {
                 "batch_size": self.batch_size,
                 "batch_size_note": "sequence-level for video models",
-                "total_epochs": None,
+                "total_epochs": self.total_epochs if hasattr(self, 'total_epochs') and self.total_epochs > 0 else None,
                 "total_iters": self.total_iters if self.total_iters > 0 else None,
                 "time_per_epoch_sec": None,
                 "time_per_iter_sec": None,
@@ -91,6 +92,8 @@ class EfficiencyTracker:
             stats['training']['total_time_sec'] = round(total_time, 2)
             if self.total_iters > 0:
                 stats['training']['time_per_iter_sec'] = round(total_time / self.total_iters, 4)
+            if hasattr(self, 'total_epochs') and self.total_epochs > 0:
+                stats['training']['time_per_epoch_sec'] = round(total_time / self.total_epochs, 2)
 
         # 训练显存
         if self.device and self.train_end_time:

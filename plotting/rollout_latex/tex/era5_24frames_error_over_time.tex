@@ -1,0 +1,33 @@
+\documentclass[tikz,border=3pt]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\input{rollout_plot_styles.tex}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+    rolloutAxis,
+    ylabel={Mean absolute error},
+    ymax=24.1182017288,
+]
+\addplot+[rolloutSRNO] table[x=frame_idx,y=srno,col sep=comma] {../data/era5_24frames_error_over_time.csv};
+\addlegendentry{SRNO}
+\addplot+[rolloutEDSR] table[x=frame_idx,y=edsr,col sep=comma] {../data/era5_24frames_error_over_time.csv};
+\addlegendentry{EDSR}
+\addplot+[rolloutBasicVSRPP] table[x=frame_idx,y=basicvsrpp,col sep=comma] {../data/era5_24frames_error_over_time.csv};
+\addlegendentry{BasicVSR++}
+\addplot+[rolloutRVRT] table[x=frame_idx,y=rvrt,col sep=comma] {../data/era5_24frames_error_over_time.csv};
+\addlegendentry{RVRT}
+\addplot+[rolloutVRT] table[x=frame_idx,y=vrt,col sep=comma] {../data/era5_24frames_error_over_time.csv};
+\addlegendentry{VRT}
+\addplot+[rolloutSDIFT] table[x=frame_idx,y=sdift,col sep=comma] {../data/era5_24frames_error_over_time.csv};
+\addlegendentry{SDIFT}
+\addplot+[rolloutWDNO] table[x=frame_idx,y=wdno,col sep=comma] {../data/era5_24frames_error_over_time.csv};
+\addlegendentry{WDNO}
+\addplot+[rolloutResShift50M] table[x=frame_idx,y=resshift50m,col sep=comma] {../data/era5_24frames_error_over_time.csv};
+\addlegendentry{ResShift}
+\addplot+[rolloutWRDKCSWSDF] table[x=frame_idx,y=wrd_kcs_wsdf,col sep=comma] {../data/era5_24frames_error_over_time.csv};
+\addlegendentry{WRD}
+\end{axis}
+\end{tikzpicture}
+\end{document}

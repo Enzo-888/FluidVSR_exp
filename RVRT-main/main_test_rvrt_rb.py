@@ -15,6 +15,7 @@ import json
 import os
 import os.path as osp
 import sys
+import time
 
 import numpy as np
 import torch
@@ -57,7 +58,7 @@ def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument('--checkpoint', required=True, help='Path to *_G.pth checkpoint')
     p.add_argument('--output-dir', default=None)
-    p.add_argument('--device', default='cuda' if torch.cuda.is_available() else 'cpu')
+    p.add_argument('--device', default='cuda:0' if torch.cuda.is_available() else 'cpu')
     return p.parse_args()
 
 
@@ -81,14 +82,42 @@ def main():
     model.load_state_dict(state['params'], strict=True)
     model.eval()
 
+    # ── Efficiency tracker ────────────────────────────────────────────────────
+    from efficiency_tracker import EfficiencyTracker
+    tracker = EfficiencyTracker(
+        model_name='RVRT',
+        dataset_name='RB',
+        save_dir=output_dir
+    )
+
+    # ── Warmup ────────────────────────────────────────────────────────────────
+    print('Warming up (3 iterations)...')
+    with torch.no_grad():
+        for i, batch in enumerate(loader):
+            if i >= 3:
+                break
+            lq = batch['L'].to(args.device)
+            _ = model(lq)
+
     # ── Inference ─────────────────────────────────────────────────────────────
+    tracker.start_inference(device=args.device)
+
     all_pred, all_gt, all_lr = [], [], []
     with torch.no_grad():
         for i, batch in enumerate(loader):
             lq = batch['L'].to(args.device)   # (1, T, 1, h, w)
             gt = batch['H'].to(args.device)   # (1, T, 1, H, W)
 
+            if args.device.startswith('cuda'):
+                torch.cuda.synchronize()
+            start_time = time.time()
+
             pred = model(lq).clamp(0, 1)      # (1, T, 1, H, W)
+
+            if args.device.startswith('cuda'):
+                torch.cuda.synchronize()
+            elapsed = time.time() - start_time
+            tracker.record_sequence_time(elapsed)
 
             # (1, T, 1, H, W) → (T, H, W, 1), denorm to physical
             pred_np = pred.squeeze(0).cpu().numpy().transpose(0, 2, 3, 1)
@@ -102,7 +131,10 @@ def main():
             all_pred.append(pred_np)
             all_gt.append(gt_np)
             all_lr.append(lq_np)
-            print(f'  Sequence {i+1}/{n_seqs}')
+            print(f'  Sequence {i+1}/{n_seqs} - {elapsed:.4f}s')
+
+    # ── Save efficiency stats ─────────────────────────────────────────────────
+    tracker.save_stats(checkpoint_path=args.checkpoint)
 
     # ── Save ──────────────────────────────────────────────────────────────────
     pred_arr = np.concatenate(all_pred, axis=0)

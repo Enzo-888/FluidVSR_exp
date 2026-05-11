@@ -54,6 +54,8 @@ def parse_args():
     p.add_argument('--output-dir', default=None,
                    help='Directory to save pred/gt/lr npz files '
                         '(default: <work_dir>/test_predictions)')
+    p.add_argument('--dataset-name', default='RB',
+                   help='Dataset name used in the efficiency JSON file')
     p.add_argument('--device', default='cuda' if torch.cuda.is_available() else 'cpu')
     return p.parse_args()
 
@@ -102,7 +104,7 @@ def main():
 
     tracker = EfficiencyTracker(
         model_name='BasicVSR++',
-        dataset_name='RB',
+        dataset_name=args.dataset_name,
         save_dir=output_dir
     )
 

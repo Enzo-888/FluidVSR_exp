@@ -1,0 +1,26 @@
+\documentclass[tikz,border=3pt]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\input{rollout_plot_styles.tex}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+    rolloutAxis,
+    ylabel={RMSE},
+    ymin=0.068908,
+    ymax=0.347886,
+]
+\addplot+[rolloutSRNO] table[x=frame_idx,y=srno,col sep=comma] {../data/kf256_rmse_over_time.csv};
+\addlegendentry{SRNO}
+\addplot+[rolloutEDSR] table[x=frame_idx,y=edsr,col sep=comma] {../data/kf256_rmse_over_time.csv};
+\addlegendentry{EDSR}
+\addplot+[rolloutRVRT] table[x=frame_idx,y=rvrt,col sep=comma] {../data/kf256_rmse_over_time.csv};
+\addlegendentry{RVRT}
+\addplot+[rolloutResShift50M] table[x=frame_idx,y=resshift50m,col sep=comma] {../data/kf256_rmse_over_time.csv};
+\addlegendentry{ResShift}
+\addplot+[rolloutWRDKCSWSDF] table[x=frame_idx,y=wrd_kcs_wsdf,col sep=comma] {../data/kf256_rmse_over_time.csv};
+\addlegendentry{WRD}
+\end{axis}
+\end{tikzpicture}
+\end{document}

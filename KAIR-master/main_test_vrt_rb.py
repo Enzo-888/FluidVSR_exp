@@ -44,7 +44,15 @@ def parse_args():
 def main():
     args = parse_args()
 
+    # Save CUDA_VISIBLE_DEVICES before option.parse overwrites it
+    _saved_cuda_env = os.environ.get('CUDA_VISIBLE_DEVICES', None)
+
     opt = option.parse(args.opt, is_train=False)
+
+    # Restore CUDA_VISIBLE_DEVICES and force single-GPU
+    if _saved_cuda_env is not None:
+        os.environ['CUDA_VISIBLE_DEVICES'] = _saved_cuda_env
+    opt['gpu_ids'] = [0]
     opt = option.dict_to_nonedict(opt)
 
     output_dir = args.output_dir or osp.join(

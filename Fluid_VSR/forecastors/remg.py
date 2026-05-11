@@ -8,6 +8,14 @@ class RemgForecaster(BaseForecaster):
     def __init__(self, path):
         super().__init__(path)
 
+    def _move_diffusion_modules(self, device):
+        if not hasattr(self, 'base_diffusion'):
+            return
+        for attr_name in ('S', 'lambda_sched'):
+            module = getattr(self.base_diffusion, attr_name, None)
+            if hasattr(module, 'to'):
+                module.to(device=device)
+
     def build_model(self, **kwargs):
         
         self.resshift_cfg = self.args['resshift']
@@ -23,7 +31,7 @@ class RemgForecaster(BaseForecaster):
         x = x.permute(0, 3, 1, 2)
         y = y.permute(0, 3, 1, 2)
         x = F.interpolate(x, size=y.shape[2:], mode='bicubic', align_corners=False)
-        self.base_diffusion.S.to(device = x.device)
+        self._move_diffusion_modules(x.device)
         
         indices = np.linspace(
                     0,
@@ -62,4 +70,3 @@ class RemgForecaster(BaseForecaster):
         y_pred = y_pred.permute(0, 2, 3, 1)
         y = y.permute(0, 2, 3, 1)
         return y_pred
-

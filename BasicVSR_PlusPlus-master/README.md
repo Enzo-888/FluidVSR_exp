@@ -1,3 +1,105 @@
+## FluidVSR Project Usage
+
+这是 `BasicVSR++` 在本项目里的本地适配说明。下面原始 upstream README 仍然保留；如果你只是想复现本项目实验，请优先看这一节。
+
+### 当前用途
+
+本地整理好的主要是 `×4` 超分任务：
+
+- `RBC`
+- `SW`
+- `KF256`
+
+本仓库里没有整理成正式训练入口的 `ERA5` 配置。
+
+### 关键文件
+
+- `configs/basicvsr_plusplus_rb.py`
+- `configs/basicvsr_plusplus_sw.py`
+- `configs/basicvsr_plusplus_kf256.py`
+- `tools/train.py`
+- `tools/test_rb.py`
+- `tools/test_sw.py`
+- `efficiency_tracker.py`
+
+### 训练
+
+`RBC`：
+
+```bash
+cd /data/yc/FluidVSR/BasicVSR_PlusPlus-master
+python tools/train.py configs/basicvsr_plusplus_rb.py --work-dir work_dirs/basicvsr_plusplus_c64n7_rb_1ch_4x
+```
+
+`SW`：
+
+```bash
+cd /data/yc/FluidVSR/BasicVSR_PlusPlus-master
+python tools/train.py configs/basicvsr_plusplus_sw.py --work-dir work_dirs/basicvsr_plusplus_c64n7_sw_1ch_4x
+```
+
+`KF256`：
+
+```bash
+cd /data/yc/FluidVSR/BasicVSR_PlusPlus-master
+python tools/train.py configs/basicvsr_plusplus_kf256.py --work-dir work_dirs/basicvsr_plusplus_c64n7_kf256_1ch_4x
+```
+
+### 推理与导出
+
+`RBC`：
+
+```bash
+cd /data/yc/FluidVSR/BasicVSR_PlusPlus-master
+python tools/test_rb.py configs/basicvsr_plusplus_rb.py work_dirs/basicvsr_plusplus_c64n7_rb_1ch_4x/latest.pth --dataset-name RB
+```
+
+`SW`：
+
+```bash
+cd /data/yc/FluidVSR/BasicVSR_PlusPlus-master
+python tools/test_sw.py configs/basicvsr_plusplus_sw.py work_dirs/basicvsr_plusplus_c64n7_sw_1ch_4x/latest.pth
+```
+
+`KF256`：
+
+```bash
+cd /data/yc/FluidVSR/BasicVSR_PlusPlus-master
+python tools/test_rb.py configs/basicvsr_plusplus_kf256.py work_dirs/basicvsr_plusplus_c64n7_kf256_1ch_4x/latest.pth --dataset-name KF256
+```
+
+说明：
+
+- `tools/test_rb.py` 现在已经被改成通用序列导出器，不再只限于 `RBC`。
+- `KF256` 没有单独的 `test_kf256.py`，直接复用 `tools/test_rb.py` 即可。
+
+### 输出格式
+
+默认输出到：
+
+```text
+<work_dir>/test_predictions/
+```
+
+目录中会包含：
+
+- `pred.npz`
+- `gt.npz`
+- `lr.npz`
+- `meta.json`
+- `BasicVSR++_<DATASET>_efficiency.json`
+
+### 统一评估
+
+导出预测后，统一回到：
+
+- `/data/yc/FluidVSR/Fluid_VSR/template_notebook/`
+- `/data/yc/FluidVSR/Fluid_VSR/tools/`
+
+做指标和可视化。
+
+---
+
 # BasicVSR_PlusPlus (CVPR 2022)
 \[[Paper](https://arxiv.org/abs/2104.13371)\] \[[Project Page](https://ckkelvinchan.github.io/projects/BasicVSR++/)\] \[[Code](https://github.com/open-mmlab/mmediting)\]
 

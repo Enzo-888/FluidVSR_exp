@@ -1,3 +1,164 @@
+## FluidVSR Project Usage
+
+这是 `SDIFT` 在本项目里的本地适配说明。下面原始 upstream README 仍然保留；如果你只是想复现本项目实验，请优先看这一节。
+
+需要强调一点：这里已经不是原始“稀疏不规则观测重建”任务，而是针对本项目的**配对超分任务**做过修改的版本。
+
+### 当前用途
+
+本地可直接运行的脚本主要覆盖：
+
+- `RBC ×4`
+- `SW ×4`
+- `KF256 ×4`
+
+本仓库当前没有整理成正式入口的 `ERA5` 训练/推理脚本。
+
+### 三阶段流程
+
+当前版本仍然保留三阶段思路：
+
+1. `FTM`
+   学习 Tucker / basis 表示。
+2. `GPSD`
+   在 core 序列上训练扩散模型。
+3. `Inference`
+   用后验采样恢复 HR 序列，并导出统一格式预测。
+
+### 关键文件
+
+- `train_FTM_RB.py`
+- `train_FTM_SW.py`
+- `train_FTM_KF256.py`
+- `train_GPSD_RB.py`
+- `train_GPSD_SW.py`
+- `train_GPSD_KF256.py`
+- `inference_RB.py`
+- `inference_SW.py`
+- `inference_KF256.py`
+- `inference_paired_sr_generic.py`
+- `sr_posterior_utils.py`
+- `efficiency_tracker.py`
+
+### 当前版本与原始任务的关键差别
+
+当前超分版本的核心修改是：
+
+- 观测不再是随机稀疏点，而是**配对的 LR 帧**
+- 后验监督不再基于“抽点观测”，而是基于**HR 解码后再做 bilinear 下采样，与 LR 对齐比较**
+
+也就是说，这里的 posterior guidance 已经是为配对超分任务改过的，不要再按原始 SDIFT 论文的“随机点观测”理解。
+
+### Stage 1: FTM
+
+`RBC`：
+
+```bash
+cd /data/yc/FluidVSR/SDIFT-main
+python train_FTM_RB.py
+```
+
+`SW`：
+
+```bash
+cd /data/yc/FluidVSR/SDIFT-main
+python train_FTM_SW.py
+```
+
+`KF256`：
+
+```bash
+cd /data/yc/FluidVSR/SDIFT-main
+python train_FTM_KF256.py
+```
+
+### Stage 2: GPSD
+
+`RBC`：
+
+```bash
+cd /data/yc/FluidVSR/SDIFT-main
+python train_GPSD_RB.py --core_path data/core_rb_*.mat
+```
+
+`SW`：
+
+```bash
+cd /data/yc/FluidVSR/SDIFT-main
+python train_GPSD_SW.py --core_path data/core_sw_*.mat
+```
+
+`KF256`：
+
+```bash
+cd /data/yc/FluidVSR/SDIFT-main
+python train_GPSD_KF256.py --core_path data/core_kf256_*.mat
+```
+
+### Stage 3: Inference
+
+`RBC`：
+
+```bash
+cd /data/yc/FluidVSR/SDIFT-main
+python inference_RB.py \
+  --basis_path ckp/basis_rb_*.pth \
+  --model_path exps/gp-edm_rb_*/checkpoints/ema_*.pth \
+  --core_mean_std_path exps/gp-edm_rb_*/core_mean_std.mat \
+  --norm_stats_path data/norm_stats_rb_*.json \
+  --output_dir output_rb
+```
+
+`SW`：
+
+```bash
+cd /data/yc/FluidVSR/SDIFT-main
+python inference_SW.py \
+  --basis_path ckp/basis_sw_*.pth \
+  --model_path exps/gp-edm_sw_*/checkpoints/ema_*.pth \
+  --core_mean_std_path exps/gp-edm_sw_*/core_mean_std.mat \
+  --norm_stats_path data/norm_stats_sw_*.json \
+  --output_dir output_sw
+```
+
+`KF256`：
+
+```bash
+cd /data/yc/FluidVSR/SDIFT-main
+python inference_KF256.py \
+  --basis_path ckp/basis_kf256_*.pth \
+  --model_path exps/gp-edm_kf256_*/checkpoints/ema_*.pth \
+  --core_mean_std_path exps/gp-edm_kf256_*/core_mean_std.mat \
+  --norm_stats_path data/norm_stats_kf256_*.json \
+  --output_dir output_kf256
+```
+
+### 输出格式
+
+输出目录通常是：
+
+- `output_rb/`
+- `output_sw/`
+- `output_kf256/`
+
+其中会包含：
+
+- `pred.npz`
+- `gt.npz`
+- `lr.npz`
+- `meta.json`
+
+### 统一评估
+
+导出预测后，统一回到：
+
+- `/data/yc/FluidVSR/Fluid_VSR/template_notebook/`
+- `/data/yc/FluidVSR/Fluid_VSR/tools/`
+
+进行指标和可视化统计。
+
+---
+
 #  Generating Full-field Evolution of Physical Dynamics from Irregular Sparse Observations [NeurIPS2025]
 <div align=center> <img src="img/illu.png" width = 100%/> </div>
 (This repo is still on update)

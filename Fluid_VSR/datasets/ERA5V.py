@@ -9,6 +9,7 @@ import torch
 import os.path as osp
 import glob
 import numpy as np
+import hashlib
 
 from torch.utils.data import Dataset
 from utils.normalizer import UnitGaussianNormalizer, GaussianNormalizer
@@ -25,7 +26,9 @@ class ERA5VDataset:
         normalize = data_args.get('normalize', True)
         normalizer_type = data_args.get('normalizer_type', 'PGN')
 
-        cache_name = f'ERA5V_{num_samples}samples_cache.pt'
+        cache_key = f"{osp.abspath(hr_path)}|{osp.abspath(lr_path)}|{num_samples}|{train_ratio}|{valid_ratio}|{test_ratio}|{normalize}|{normalizer_type}"
+        cache_hash = hashlib.md5(cache_key.encode("utf-8")).hexdigest()[:10]
+        cache_name = f'ERA5V_{num_samples}samples_{cache_hash}_cache.pt'
         cache_dir = osp.join(osp.dirname(osp.abspath(__file__)), '..', 'cache')
         import os; os.makedirs(cache_dir, exist_ok=True)
         cache_path = osp.join(cache_dir, cache_name)

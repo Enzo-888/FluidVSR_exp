@@ -1,0 +1,54 @@
+\definecolor{rollBlue}{HTML}{1F77B4}
+\definecolor{rollTeal}{HTML}{0F766E}
+\definecolor{rollOrange}{HTML}{FF7F0E}
+\definecolor{rollPurple}{HTML}{7E57C2}
+\definecolor{rollBrown}{HTML}{8C564B}
+\definecolor{rollRed}{HTML}{D62728}
+\definecolor{rollBlack}{HTML}{111111}
+
+\pgfplotsset{
+  rolloutAxis/.style={
+    width=15.0cm,
+    height=7.9cm,
+    xlabel={Frame index},
+    ymin=0,
+    tick align=outside,
+    tick pos=left,
+    grid=both,
+    major grid style={draw=black!24, dashed},
+    minor grid style={draw=black!10, dotted},
+    axis line style={line width=0.95pt},
+    every axis plot/.append style={line join=round},
+    label style={font=\bfseries\normalsize},
+    tick label style={font=\bfseries\small},
+    legend style={
+      at={(0.985,0.985)},
+      anchor=north east,
+      draw=black!18,
+      fill=white,
+      fill opacity=0.92,
+      text opacity=1,
+      rounded corners=1pt,
+      font=\bfseries\footnotesize,
+      legend columns=2,
+      /tikz/every even column/.append style={column sep=0.18cm},
+      row sep=1.5pt,
+      inner xsep=5pt,
+      inner ysep=4pt,
+    },
+    legend cell align=left,
+    clip mode=individual,
+    unbounded coords=discard,
+    scaled y ticks=false,
+  },
+  rolloutSRNO/.style={color=rollBlue, solid, semithick},
+  rolloutEDSR/.style={color=rollTeal, dashed, semithick},
+  rolloutBasicVSRPP/.style={color=rollOrange, dashdotted, semithick},
+  rolloutRVRT/.style={color=rollPurple, densely dashed, semithick},
+  rolloutVRT/.style={color=green!55!black, densely dashdotted, semithick},
+  rolloutSDIFT/.style={color=gray!70!black, solid, line width=1.0pt},
+  rolloutWDNO/.style={color=magenta!75!black, dashed, line width=1.0pt},
+  rolloutResShift50M/.style={color=rollBrown, solid, line width=1.05pt},
+  rolloutWRD/.style={color=rollRed, densely dashdotted, line width=1.05pt},
+  rolloutWRDKCSWSDF/.style={color=rollBlack, solid, line width=1.35pt},
+}

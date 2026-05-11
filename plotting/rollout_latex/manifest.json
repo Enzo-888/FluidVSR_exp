@@ -1,0 +1,176 @@
+{
+  "ERA5_24frames": {
+    "dataset_title": "ERA5_24frames\u00d74",
+    "frames_per_seq": 24,
+    "available_models": [
+      "SRNO",
+      "EDSR",
+      "BasicVSR++",
+      "RVRT",
+      "ResShift",
+      "WRD"
+    ],
+    "missing_models": [],
+    "source_dirs": {
+      "SRNO": "/home/yc/transfer_to_a100/x4_test_predictions/ERA5V/test_predictions/srno",
+      "EDSR": "/home/yc/transfer_to_a100/x4_test_predictions/ERA5V/test_predictions/edsr",
+      "BasicVSR++": "/home/yc/transfer_to_a100/x4_test_predictions/ERA5V/test_predictions/basicvsr++",
+      "RVRT": "/home/yc/transfer_to_a100/x4_test_predictions/ERA5V/test_predictions/rvrt",
+      "ResShift": "/home/yc/transfer_to_a100/x4_test_predictions/ERA5V/test_predictions/ResShift50M",
+      "WRD": "/home/yc/transfer_to_a100/x4_test_predictions/ERA5V/test_predictions/WRD_KCS+WSDF"
+    },
+    "csv_outputs": {
+      "error": "data/era5_24frames_error_over_time.csv",
+      "rmse": "data/era5_24frames_rmse_over_time.csv"
+    },
+    "tex_outputs": {
+      "error": "tex/era5_24frames_error_over_time.tex",
+      "rmse": "tex/era5_24frames_rmse_over_time.tex"
+    }
+  },
+  "ERA5": {
+    "dataset_title": "ERA5\u00d74",
+    "frames_per_seq": 72,
+    "available_models": [
+      "SRNO",
+      "EDSR",
+      "BasicVSR++",
+      "RVRT",
+      "ResShift",
+      "WRD"
+    ],
+    "missing_models": [],
+    "source_dirs": {
+      "SRNO": "/home/yc/transfer_to_a100/formal_predictions/x4/era5/test_predictions/srno",
+      "EDSR": "/home/yc/transfer_to_a100/formal_predictions/x4/era5/test_predictions/edsr",
+      "BasicVSR++": "/home/yc/transfer_to_a100/formal_predictions/x4/era5/test_predictions/basicvsr++",
+      "RVRT": "/home/yc/transfer_to_a100/formal_predictions/x4/era5/test_predictions/rvrt",
+      "ResShift": "/home/yc/transfer_to_a100/formal_predictions/x4/era5/test_predictions/resshift50m",
+      "WRD": "/home/yc/transfer_to_a100/formal_predictions/x4/era5/test_predictions/wrd_baseline_attn"
+    },
+    "csv_outputs": {
+      "error": "data/era5_error_over_time.csv",
+      "rmse": "data/era5_rmse_over_time.csv"
+    },
+    "tex_outputs": {
+      "error": "tex/era5_error_over_time.tex",
+      "rmse": "tex/era5_rmse_over_time.tex"
+    }
+  },
+  "KF256": {
+    "dataset_title": "KF256\u00d74",
+    "frames_per_seq": 180,
+    "available_models": [
+      "SRNO",
+      "EDSR",
+      "BasicVSR++",
+      "RVRT",
+      "ResShift",
+      "WRD"
+    ],
+    "missing_models": [],
+    "source_dirs": {
+      "SRNO": "/home/yc/transfer_to_a100/x4_test_predictions/KF256/test_predictions/srno",
+      "EDSR": "/home/yc/transfer_to_a100/x4_test_predictions/KF256/test_predictions/edsr",
+      "BasicVSR++": "/home/yc/transfer_to_a100/x4_test_predictions/KF256/test_predictions/basicvsr++",
+      "RVRT": "/home/yc/transfer_to_a100/x4_test_predictions/KF256/test_predictions/rvrt",
+      "ResShift": "/home/yc/transfer_to_a100/x4_test_predictions/KF256/test_predictions/resshift50M",
+      "WRD": "/home/yc/transfer_to_a100/x4_test_predictions/KF256/test_predictions/WRD_sgf_KCS+WSDF"
+    },
+    "csv_outputs": {
+      "error": "data/kf256_error_over_time.csv",
+      "rmse": "data/kf256_rmse_over_time.csv"
+    },
+    "tex_outputs": {
+      "error": "tex/kf256_error_over_time.tex",
+      "rmse": "tex/kf256_rmse_over_time.tex"
+    }
+  },
+  "RBC": {
+    "dataset_title": "RBC\u00d74",
+    "frames_per_seq": 100,
+    "available_models": [
+      "SRNO",
+      "EDSR",
+      "BasicVSR++",
+      "RVRT",
+      "ResShift",
+      "WRD"
+    ],
+    "missing_models": [],
+    "source_dirs": {
+      "SRNO": "/home/yc/transfer_to_a100/x4_test_predictions/RBC/test_predictions/srno",
+      "EDSR": "/home/yc/transfer_to_a100/x4_test_predictions/RBC/test_predictions/edsr",
+      "BasicVSR++": "/home/yc/transfer_to_a100/x4_test_predictions/RBC/test_predictions/basicvsr++",
+      "RVRT": "/home/yc/transfer_to_a100/x4_test_predictions/RBC/test_predictions/rvrt",
+      "ResShift": "/home/yc/transfer_to_a100/x4_test_predictions/RBC/test_predictions/resshift50M",
+      "WRD": "/home/yc/transfer_to_a100/x4_test_predictions/RBC/test_predictions/WRD_KCS+WSDF"
+    },
+    "csv_outputs": {
+      "error": "data/rbc_error_over_time.csv",
+      "rmse": "data/rbc_rmse_over_time.csv"
+    },
+    "tex_outputs": {
+      "error": "tex/rbc_error_over_time.tex",
+      "rmse": "tex/rbc_rmse_over_time.tex"
+    }
+  },
+  "SW": {
+    "dataset_title": "SW\u00d74",
+    "frames_per_seq": 72,
+    "available_models": [
+      "SRNO",
+      "EDSR",
+      "BasicVSR++",
+      "RVRT",
+      "ResShift",
+      "WRD"
+    ],
+    "missing_models": [],
+    "source_dirs": {
+      "SRNO": "/home/yc/transfer_to_a100/x4_test_predictions/SW/test_predictions/srno",
+      "EDSR": "/home/yc/transfer_to_a100/x4_test_predictions/SW/test_predictions/edsr",
+      "BasicVSR++": "/home/yc/transfer_to_a100/x4_test_predictions/SW/test_predictions/basicvsr++",
+      "RVRT": "/home/yc/transfer_to_a100/x4_test_predictions/SW/test_predictions/rvrt",
+      "ResShift": "/home/yc/transfer_to_a100/x4_test_predictions/SW/test_predictions/resshift50M",
+      "WRD": "/home/yc/transfer_to_a100/x4_test_predictions/SW/test_predictions/WRD_sgf_KCS+WSDF"
+    },
+    "csv_outputs": {
+      "error": "data/sw_error_over_time.csv",
+      "rmse": "data/sw_rmse_over_time.csv"
+    },
+    "tex_outputs": {
+      "error": "tex/sw_error_over_time.tex",
+      "rmse": "tex/sw_rmse_over_time.tex"
+    }
+  },
+  "KF256_video": {
+    "dataset_title": "KF256\u00d74",
+    "frames_per_seq": 180,
+    "available_models": [
+      "BasicVSR++",
+      "VRT",
+      "RVRT",
+      "SDIFT",
+      "WDNO",
+      "WRD"
+    ],
+    "missing_models": [],
+    "source_dirs": {
+      "BasicVSR++": "/home/yc/transfer_to_a100/formal_predictions/x4/KF256/test_predictions/basicvsr++",
+      "VRT": "/home/yc/transfer_to_a100/formal_predictions/x4/KF256/test_predictions/vrt",
+      "RVRT": "/home/yc/transfer_to_a100/formal_predictions/x4/KF256/test_predictions/rvrt",
+      "SDIFT": "/home/yc/transfer_to_a100/formal_predictions/x4/KF256/test_predictions/sdift",
+      "WDNO": "/home/yc/transfer_to_a100/formal_predictions/x4/KF256/test_predictions/wdno",
+      "WRD": "/home/yc/transfer_to_a100/formal_predictions/x4/KF256/test_predictions/WRD_sgf"
+    },
+    "csv_outputs": {
+      "error": "data/kf256_video_error_over_time.csv",
+      "rmse": "data/kf256_video_rmse_over_time.csv"
+    },
+    "tex_outputs": {
+      "error": "tex/kf256_video_error_over_time.tex",
+      "rmse": "tex/kf256_video_rmse_over_time.tex"
+    }
+  }
+}

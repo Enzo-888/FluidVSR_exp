@@ -23,10 +23,11 @@ import argparse
 
 import numpy as np
 import torch
+import yaml
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from forecastors.base import BaseForecaster
+from forecastors import BaseForecaster, DDPMForecaster, RemgForecaster, ResshiftForecaster
 from datasets import _dataset_dict
 
 
@@ -41,6 +42,26 @@ def parse_args():
     return p.parse_args()
 
 
+def build_forecaster(model_dir):
+    config_path = os.path.join(model_dir, 'config.yaml')
+    with open(config_path, 'r') as f:
+        args = yaml.safe_load(f)
+
+    model_name = str(args.get('model', {}).get('name', '')).lower()
+
+    if 'resshift' in model_name:
+        forecaster_cls = ResshiftForecaster
+    elif 'remg' in model_name:
+        forecaster_cls = RemgForecaster
+    elif 'beta_schedule' in args:
+        forecaster_cls = DDPMForecaster
+    else:
+        forecaster_cls = BaseForecaster
+
+    print(f'Using forecaster: {forecaster_cls.__name__}')
+    return forecaster_cls(model_dir)
+
+
 def main():
     args = parse_args()
 
@@ -49,7 +70,7 @@ def main():
 
     # ── 1. Load model (config.yaml + best_model.pth) ─────────────────────────
     print(f'Loading model from: {args.model_dir}')
-    forecaster = BaseForecaster(args.model_dir)
+    forecaster = build_forecaster(args.model_dir)
 
     # ── 2. Rebuild dataset from the same config ───────────────────────────────
     data_args = forecaster.data_args

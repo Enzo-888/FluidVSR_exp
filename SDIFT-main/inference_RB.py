@@ -2,8 +2,8 @@
 # Adapted from message_passing_DPS.py for RayleighBenard VSR task.
 #
 # Key changes vs original:
-#   - Observations come from LR 32x32 grid (not random sparse points)
-#   - Observation operator A = basis(LR fixed coordinates), precomputed once per sequence
+#   - Observations come from paired LR 32x32 frames (not random sparse points)
+#   - Posterior guidance matches the true forward model: decode HR -> bilinear x4 -> compare to LR
 #   - sample_shape uses [1, 100, 1, 128, 128]
 #   - Output saved as pred.npz / gt.npz / lr.npz in (N_frames, H, W, 1) physical values
 #     (for eval by /data/yc/Fluid_VSR/tools/eval_metrics.py)
@@ -26,6 +26,11 @@ import time
 import sys
 
 from networks_edm import Spatial_temporal_UNet
+from sr_posterior_utils import (
+    build_lr_observations as build_paired_lr_observations,
+    compute_bilinear_sr_posterior_grad,
+    precompute_decoder_bases,
+)
 
 
 def set_seed(seed=42):
@@ -58,93 +63,29 @@ def get_gp_covariance(t, gp_gamma=50):
 # ---- Observation construction ----
 
 def build_lr_observations(lr_seq_norm, t_ind_uni):
-    """
-    Build grouped observations from LR normalized data.
-
-    Args:
-        lr_seq_norm: [T, 1, 32, 32] normalized LR for one test sequence
-        t_ind_uni:   [T] time indices in [0,1]
-
-    Returns:
-        y_group:          list[T] of np.array [1024] — LR pixel values per frame
-        ind_conti_group:  list[T] of np.array [1024, 3] — (u,v,w) coords (same for all T)
-        y_time_group:     list[T] of float — continuous time index
-        y_time_ind_group: list[T] of int   — integer time index
-    """
-    T = lr_seq_norm.shape[0]
-
-    # LR coordinates: u=1.0 (D=1 single point), v and w on linspace(0,1,32)
-    u_val  = np.array([1.0], dtype=np.float32)
-    lr_v   = np.linspace(0, 1, 32, dtype=np.float32)
-    lr_w   = np.linspace(0, 1, 32, dtype=np.float32)
-    vv, ww = np.meshgrid(lr_v, lr_w, indexing='ij')
-    uu     = np.ones_like(vv) * u_val[0]
-    lr_coords = np.stack([uu.ravel(), vv.ravel(), ww.ravel()], axis=1)  # [1024, 3]
-
-    y_group          = []
-    ind_conti_group  = []
-    y_time_group     = []
-    y_time_ind_group = []
-
-    for t in range(T):
-        y_t = lr_seq_norm[t, 0, :, :].ravel().astype(np.float64)  # [1024]
-        y_group.append(y_t)
-        ind_conti_group.append(lr_coords)
-        y_time_group.append(float(t_ind_uni[t]))
-        y_time_ind_group.append(t)
-
-    return y_group, ind_conti_group, y_time_group, y_time_ind_group
+    return build_paired_lr_observations(lr_seq_norm, t_ind_uni)
 
 
 # ---- Posterior gradient (MPDPS) ----
 
 def compute_continuous_poest(x_0, basis_function, core_mean, core_std, core_t,
                               y_group, ind_conti_group, y_time_group, y_time_ind_group,
-                              MPDPS=0.4):
-    core_tensor_shape = x_0.shape
-    x_0_vec = x_0.view(core_tensor_shape[0], core_tensor_shape[1], -1)  # [1, T, R1R2R3]
-    poest_matrix1 = torch.zeros_like(x_0_vec).to(device)
-    poest_matrix2 = torch.zeros_like(x_0_vec).to(device)
-
-    # Denormalize core (GPSD normalization → FTM [0,1] scale)
-    x_0_denorm = x_0_vec * core_std + core_mean
-
-    for y, y_tt, y_t_ind, ind in zip(y_group, y_time_group, y_time_ind_group, ind_conti_group):
-        if len(y) == 0:
-            continue
-
-        # Stage 1: direct observation constraint at this time step
-        x_0_t    = x_0_denorm[0, y_t_ind, :]          # [R1R2R3]
-        y_tensor = torch.DoubleTensor(y).to(device)     # [1024]
-        ind_tensor = torch.FloatTensor(ind).to(device)  # [1024, 3]
-        A = basis_function(input_ind_sampl=ind_tensor).detach().double()  # [1024, R1R2R3]
-        poest_matrix1[0, y_t_ind, :] = A.T @ (y_tensor - A @ x_0_t)
-
-        # Stage 2: temporal message passing to all other time steps
-        t_remove_group = y_time_ind_group.copy()
-        t_remove_group.remove(y_t_ind)
-        if len(t_remove_group) == 0:
-            continue
-
-        core_t_remove = core_t[:, t_remove_group, :]      # [1, T-1, 1]
-        x_0_remove    = x_0_denorm[:, t_remove_group, :]  # [1, T-1, R1R2R3]
-
-        ktT     = get_ktT(y_tt, core_t_remove).squeeze(2)  # [1, T-1]
-        KTT_inv = get_kTT_inv(core_t_remove)                # [1, T-1, T-1]
-        coeff   = (ktT @ KTT_inv).to(device).squeeze(1)     # [1, T-1] -> squeeze -> [T-1] when squeezed...
-
-        # coeff shape after squeeze: handle both [1, T-1] and scalar cases
-        if coeff.dim() == 1:
-            coeff = coeff.unsqueeze(0)  # [1, T-1]
-
-        x_0_aggregate = (coeff @ x_0_remove).squeeze()          # [R1R2R3]
-        post          = A.T @ (y_tensor - A @ x_0_aggregate)     # [R1R2R3]
-
-        temp = torch.zeros_like(x_0_vec).to(device)
-        temp[:, t_remove_group, :] = coeff.unsqueeze(-1) * post.float().view(1, 1, -1)
-        poest_matrix2 += temp
-
-    return (poest_matrix1 + MPDPS * poest_matrix2).view(core_tensor_shape)
+                              decoder_bases, lr_hw, MPDPS=0.4):
+    del basis_function, ind_conti_group
+    return compute_bilinear_sr_posterior_grad(
+        x_0=x_0,
+        decoder_bases=decoder_bases,
+        core_mean=core_mean,
+        core_std=core_std,
+        core_t=core_t,
+        y_group=y_group,
+        y_time_group=y_time_group,
+        y_time_ind_group=y_time_ind_group,
+        lr_hw=lr_hw,
+        get_ktT_fn=get_ktT,
+        get_kTT_inv_fn=get_kTT_inv,
+        MPDPS=MPDPS,
+    )
 
 
 # ---- EDM model (EDM class from train_GPSD_RB, copied here for standalone use) ----
@@ -188,6 +129,7 @@ class EDM:
 @torch.no_grad()
 def edm_post_sampler(edm, basis_function, latents, t, y_group, ind_conti_group,
                      y_time_group, y_time_ind_group,
+                     decoder_bases, lr_hw,
                      num_steps=20, sigma_min=0.002, sigma_max=80, rho=7,
                      zeta=0.009, MPDPS=0.4):
     sigma_min = max(sigma_min, edm.sigma_min)
@@ -221,6 +163,7 @@ def edm_post_sampler(edm, basis_function, latents, t, y_group, ind_conti_group,
             llk_grad = compute_continuous_poest(
                 denoised_core, basis_function, core_mean, core_std, t,
                 y_group, ind_conti_group, y_time_group, y_time_ind_group,
+                decoder_bases, lr_hw,
                 MPDPS=MPDPS)
             x_next = x_next + (zeta / (i + 1)) * llk_grad
 
@@ -291,7 +234,7 @@ if __name__ == "__main__":
     parser.add_argument('--sigma_data',         type=float, default=0.5)
     parser.add_argument("--img_size",           type=int,   default=128)
     parser.add_argument('--channels',           type=int,   default=1)
-    parser.add_argument('--model_channels',     type=int,   default=32)
+    parser.add_argument('--model_channels',     type=int,   default=16)
     parser.add_argument('--channel_mult',       type=int,   nargs='+', default=[1, 2, 4, 4])
     parser.add_argument('--attn_resolutions',   type=int,   nargs='+', default=[])
     parser.add_argument('--layers_per_block',   type=int,   default=4)
@@ -345,12 +288,16 @@ if __name__ == "__main__":
 
     N_test = hr_norm.shape[0]
     T      = hr_norm.shape[1]
+    lr_hw  = tuple(lr_norm.shape[-2:])
     print(f"Test sequences: {N_test}, frames: {T}")
 
     # ---- Load basis function ----
     basis_function = torch.load(config.basis_path, map_location=device)
     basis_function.eval()
     basis_function.mode = "sampling"
+    decoder_bases = precompute_decoder_bases(
+        basis_function, u_ind_uni, hr_v_ind, hr_w_ind, device=device
+    )
 
     # ---- Load diffusion model ----
     my_net = create_model(config)
@@ -386,6 +333,7 @@ if __name__ == "__main__":
         _ = edm_post_sampler(
             edm, basis_function, x_T, t_grid,
             y_group, ind_conti_group, y_time_group, y_time_ind_group,
+            decoder_bases, lr_hw,
             num_steps=config.total_steps,
             zeta=config.zeta,
             MPDPS=config.MPDPS,
@@ -424,6 +372,7 @@ if __name__ == "__main__":
         sample = edm_post_sampler(
             edm, basis_function, x_T, t_grid,
             y_group, ind_conti_group, y_time_group, y_time_ind_group,
+            decoder_bases, lr_hw,
             num_steps=config.total_steps,
             zeta=config.zeta,
             MPDPS=config.MPDPS,
@@ -471,7 +420,19 @@ if __name__ == "__main__":
     np.savez(os.path.join(config.output_dir, 'pred.npz'), data=pred_all)
     np.savez(os.path.join(config.output_dir, 'gt.npz'),   data=gt_all)
     np.savez(os.path.join(config.output_dir, 'lr.npz'),   data=lr_all)
-    print(f"\nSaved pred/gt/lr.npz to {config.output_dir}")
+
+    # ---- Save meta.json ----
+    import json as json_mod
+    meta = {
+        'frames_per_seq': T,
+        'n_seqs': N_test,
+        'norm_stats': {'data_min': data_min, 'data_max': data_max},
+        'checkpoint': config.model_path,
+    }
+    with open(os.path.join(config.output_dir, 'meta.json'), 'w') as f:
+        json_mod.dump(meta, f, indent=2)
+
+    print(f"\nSaved pred/gt/lr.npz + meta.json to {config.output_dir}")
     print(f"  pred shape: {pred_all.shape}  gt shape: {gt_all.shape}  lr shape: {lr_all.shape}")
 
     overall_rmse = np.sqrt(np.mean((pred_all - gt_all) ** 2))
